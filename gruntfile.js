@@ -102,6 +102,11 @@ module.exports = function(grunt) {
                 options: {
                     create: ["obj/es5"]
                 }
+            },
+            'closure-compiler-build': {
+                options: {
+                    create: ["node_modules/grunt-closure-compiler-build/build"]
+                }
             }
         },
         browserify: {
@@ -203,5 +208,9 @@ module.exports = function(grunt) {
         'mkdir:obj/es5',
         'browserify',
         'closure-compiler:optimize'
-    ])
+    ]);
+    grunt.registerTask('init', [
+        'mkdir:closure-compiler-build',
+        'closure-compiler-build'
+    ]);
 };

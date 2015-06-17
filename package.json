@@ -23,9 +23,16 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^14.0.0",
     "grunt-jasmine-node": "^0.3.1",
+    "grunt-lodash": "^0.4.0",
     "grunt-mkdir": "^0.1.2",
     "grunt-react-templates": "^0.1.9",
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "lodash-cli": "^3.9.3"
+  },
+  "browser": {
+    "lodash": "./shim/lodash-shim.js",
+    "react": "./shim/react-shim.js",
+    "react/addons": "./shim/react-shim.js"
   },
   "dependencies": {
     "lodash": "^3.9.3",

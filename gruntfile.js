@@ -1,15 +1,51 @@
 module.exports = function(grunt) {
     grunt.initConfig({
-        'closure-compiler-build': {
+        // Initial Tasks:
+        "closure-compiler-build": {
             build: {
                 url: 'http://dl.google.com/closure-compiler/compiler-latest.zip',
-                dir: 'node_modules/grunt-closure-compiler-build/build/',
+                dir: 'obj/closure/build/',
                 filename: 'compiler.zip'
             }
         },
-        "babel": {
+        mkdir: {
+            'obj/es5': {
+                options: {
+                    create: ["obj/es5"]
+                }
+            },
+            'closure-compiler-build': {
+                // Due to a bug: https://github.com/ionscript/grunt-closure-compiler-build/issues/2
+                // We need to create this directory before grunt-closure-compiler-build does.
+                options: {
+                    create: ["obj/closure/build"]
+                }
+            }
+        },
+        lodash: {
+            'build': {
+                // output location
+                'dest': 'obj/lodash/lodash.build.js',
+                'options': {
+                    // modifiers for prepared builds
+                    // modern, strict, compat
+                    'modifier': 'modern'
+                }
+            }
+        },
+
+
+        // Build Tasks:
+        clean: {
+            build: ["obj/rt", "obj/src", "obj/es5"]
+        },
+        eslint: {
+            target: ['src/**/*.js'],
+            options: {}
+        },
+        babel: {
             options: {
-                sourceMap: true,
+                sourceMap: "inline",
                 optional: "runtime"
             },
             dist: {
@@ -22,24 +58,39 @@ module.exports = function(grunt) {
                 }]
             }
         },
-        'closure-compiler': {
-            optimize: {
-                closurePath:'node_modules/grunt-closure-compiler-build',
-                js: 'obj/es5/compiled.js',
-                jsOutputFile: 'obj/es5/compiled.min.js',
-                options: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS'
-                }
-            }
-        },
-        eslint: {
-            target: ['src/**/*.js'],
-            options: {}
-        },
-        "reactTemplates": {
+        reactTemplates: {
             modules: 'commonjs',
             format: 'stylish',
             src: ['obj/rt/**/*.rt']
+        },
+        jasmine_node: {
+            projectRoot: 'obj/src/tests/',
+            specNameMatcher: 'test',
+            matchall: true,
+            all: []
+        },
+        browserify: {
+            options: {
+                browserifyOptions: {
+                    debug: true
+                }
+            },
+            development: {
+                debug: true,
+                files: {
+                    "obj/es5/compiled.js": "obj/src/main.js"
+                }
+            }
+        },
+        "closure-compiler": {
+            optimize: {
+                closurePath:'obj/closure',
+                js: 'obj/es5/compiled.js',
+                jsOutputFile: 'obj/es5/compiled.min.js',
+                options: {
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS'
+                }
+            }
         },
         copy: {
             // Copy react templates to obj to be processed
@@ -57,43 +108,11 @@ module.exports = function(grunt) {
                 dest: 'obj/src/'
             }
         },
-        clean: {
-            build: ["obj"]
-        },
-        mkdir: {
-            'obj/es5': {
-                options: {
-                    create: ["obj/es5"]
-                }
-            },
-            'closure-compiler-build': {
-                options: {
-                    create: ["node_modules/grunt-closure-compiler-build/build"]
-                }
-            }
-        },
-        browserify: {
-            options: {
-                external: "main",
-                browserifyOptions: {
-                    debug: true
-                }
-            },
-            development: {
-                debug: true,
-                files: {
-                    "obj/es5/compiled.js": "obj/src/main.js"
-                }
-            }
-        },
-        jasmine_node: {
-            projectRoot: 'obj/src/tests/',
-            specNameMatcher: 'test',
-            matchall: true,
-            all: []
-        },
+
+
+        // Development Tasks:
         watch: {
-            'closure-compiler:es6toes5': {
+            'eslint-babel': {
                 files: ['src/**/*.js'],
                 tasks: ['eslint', 'babel']
             },
@@ -112,6 +131,7 @@ module.exports = function(grunt) {
         }
 
     });
+    grunt.loadNpmTasks('grunt-lodash');
     grunt.loadNpmTasks('grunt-jasmine-node');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-browserify');
@@ -136,6 +156,7 @@ module.exports = function(grunt) {
         'closure-compiler:optimize'
     ]);
     grunt.registerTask('init', [
+        'lodash:build',
         'mkdir:closure-compiler-build',
         'closure-compiler-build'
     ]);

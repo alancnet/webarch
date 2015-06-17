@@ -10,7 +10,9 @@ grunt watch
 This will install all NPM dependencies.
 
 ## grunt init
-This will initialize the repository with one-time tasks.
+This will initialize the repository with one-time tasks, including:
+- Lodash: Builds a minified lodash library.
+- Closure Build: Downloads the closure compiler library.
 
 ## grunt
 This will run through the entire build process, including:
@@ -19,10 +21,7 @@ This will run through the entire build process, including:
 - ReactTemplates: Converts .rt files into React Template modules.
 - Jasmine: Executes unit tests.
 - Browserify: Combines all JavaScript files into a single file.
-- Closure: Optimizations including
-  - Removing dead code
-  - Obfuscation
-  - Simplifying expressions
+- Closure: Optimization and obfuscation.
 
 The resulting compiled files are available at
 - `obj/es6/compiled.js` - Browserified, human readable.

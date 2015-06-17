@@ -1,10 +1,11 @@
-// jest
 var mainTemplate = require("./main.rt");
-
-mainTemplate(1123);
-
-let a = 1234;
-a += 1;
+var React = require("react");
+if (typeof document !== "undefined") {
+    document.addEventListener("DOMContentLoaded", function() {
+        React.render(mainTemplate(), document.getElementsByTagName("body")[0]);
+    });
+}
+// jest
 
 /**
  * Iterator for fibonacci numbers

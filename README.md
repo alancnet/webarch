@@ -27,3 +27,8 @@ This will run through the entire build process, including:
 The resulting compiled files are available at
 - `obj/es6/compiled.js` - Browserified, human readable.
 - `obj/es6/compiled.min.js` - Optimized, obfuscated. Not human readable.
+
+## grunt watch
+This will continue to validate coding style, run unit tests, and build as you edit and save files.
+
+**You must run `grunt` before running `grunt watch`!**

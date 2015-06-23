@@ -110,11 +110,23 @@ module.exports = function(grunt) {
         },
 
 
-        // Development Tasks:
+        // Development Tasks (start with 'grunt dev'):
+        connect: {
+            server: {
+                options: {
+                    port: 9001,
+                    base: './',
+                    livereload: true
+                }
+            }
+        },
         watch: {
             'eslint-babel': {
                 files: ['src/**/*.js'],
-                tasks: ['eslint', 'babel']
+                tasks: ['eslint', 'babel'],
+                options: {
+                    interrupt: true
+                }
             },
             'react-templates': {
                 files: ['src/**/*.rt'],
@@ -122,15 +134,28 @@ module.exports = function(grunt) {
             },
             'browserify': {
                 files: ['obj/src/**/*.js'],
-                tasks: ['jasmine_node:all', 'mkdir:obj/es5', 'browserify']
+                tasks: ['jasmine_node:all', 'mkdir:obj/es5', 'browserify'],
+                options: {
+                    livereload: true
+                }
             },
             'closure-compiler:optimize': {
                 files: ['obj/es5/compiled.js'],
-                tasks: ['closure-compiler:optimize']
+                tasks: ['closure-compiler:optimize'],
+                options: {
+                    interrupt: true
+                }
+            },
+            'content-files': {
+                files: ['*.html'],
+                options: {
+                    livereload: true
+                }
             }
         }
 
     });
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-lodash');
     grunt.loadNpmTasks('grunt-jasmine-node');
     grunt.loadNpmTasks('grunt-babel');
@@ -159,5 +184,9 @@ module.exports = function(grunt) {
         'lodash:build',
         'mkdir:closure-compiler-build',
         'closure-compiler-build'
+    ]);
+    grunt.registerTask('dev', [
+        'connect',
+        'watch'
     ]);
 };

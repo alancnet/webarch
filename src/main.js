@@ -1,16 +1,18 @@
-var mainTemplate = require("./main.rt");
-var React = require("react");
-if (typeof document !== "undefined") {
-    document.addEventListener("DOMContentLoaded", function() {
-        React.render(mainTemplate(), document.getElementsByTagName("body")[0]);
+import React from "react";
+import router from "react-router";
+import routes from "./routes.rt";
+
+export function run(hash, target) {
+    router.run(routes(), hash, (Root) => {
+        React.render(React.createElement(Root, {}), target);
     });
+
 }
-// jest
 
 /**
  * Iterator for fibonacci numbers
  */
-function* fib() {
+export function* fib() {
     function* loop(pre, cur) {
         yield cur;
         yield* loop(cur, pre + cur);
@@ -20,7 +22,7 @@ function* fib() {
 }
 
 
-function* take(iterable, n) {
+export function* take(iterable, n) {
     if (n > 0) {
         let next = iterable.next();
         if (!next.done) {
@@ -30,7 +32,10 @@ function* take(iterable, n) {
     }
 }
 
-module.exports = {
-    fib: fib,
-    take: take
-};
+
+
+if (typeof document !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () =>
+            run(router.HashLocation, document.body)
+    );
+}

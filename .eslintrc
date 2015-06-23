@@ -14,5 +14,6 @@
     "jasmine": true,
     "amd": true,
     "node": true
-  }
+  },
+  "ecmaFeatures": { "modules": true }
 }

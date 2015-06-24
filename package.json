@@ -27,13 +27,9 @@
     "grunt-lodash": "^0.4.0",
     "grunt-mkdir": "^0.1.2",
     "grunt-react-templates": "^0.1.9",
+    "grunt-watchify": "^0.1.0",
     "jasmine-node": "^1.14.5",
     "lodash-cli": "^3.9.3"
-  },
-  "browser": {
-    "lodash": "./shim/lodash-shim.js",
-    "react": "./shim/react-shim.js",
-    "react/addons": "./shim/react-shim.js"
   },
   "dependencies": {
     "lodash": "^3.9.3",

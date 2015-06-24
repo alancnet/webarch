@@ -69,17 +69,15 @@ module.exports = function(grunt) {
             matchall: true,
             all: []
         },
-        browserify: {
+        watchify: {
             options: {
                 browserifyOptions: {
                     debug: true
                 }
             },
             development: {
-                debug: true,
-                files: {
-                    "obj/es5/compiled.js": "obj/src/main.js"
-                }
+                src: ["./obj/src/**/*.js", '!./obj/src/**/*-test.js'],
+                dest: "obj/es5/compiled.js"
             }
         },
         "closure-compiler": {
@@ -134,18 +132,18 @@ module.exports = function(grunt) {
             },
             'browserify': {
                 files: ['obj/src/**/*.js'],
-                tasks: ['jasmine_node:all', 'mkdir:obj/es5', 'browserify'],
+                tasks: ['jasmine_node:all', 'mkdir:obj/es5'],
                 options: {
                     livereload: true
                 }
             },
-            'closure-compiler:optimize': {
-                files: ['obj/es5/compiled.js'],
-                tasks: ['closure-compiler:optimize'],
-                options: {
-                    interrupt: true
-                }
-            },
+            //'closure-compiler:optimize': {
+            //    files: ['obj/es5/compiled.js'],
+            //    tasks: ['closure-compiler:optimize'],
+            //    options: {
+            //        interrupt: true
+            //    }
+            //},
             'content-files': {
                 files: ['*.html'],
                 options: {
@@ -159,7 +157,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-lodash');
     grunt.loadNpmTasks('grunt-jasmine-node');
     grunt.loadNpmTasks('grunt-babel');
-    grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-watchify');
     grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -177,7 +175,7 @@ module.exports = function(grunt) {
         'copy:rt-out',
         'jasmine_node:all',
         'mkdir:obj/es5',
-        'browserify',
+        'watchify',
         'closure-compiler:optimize'
     ]);
     grunt.registerTask('init', [
@@ -186,6 +184,7 @@ module.exports = function(grunt) {
         'closure-compiler-build'
     ]);
     grunt.registerTask('dev', [
+        'watchify',
         'connect',
         'watch'
     ]);

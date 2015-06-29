@@ -1,5 +1,7 @@
-<rt-require dependency="react-router" as="Router" />
 <div>
     <h1>App</h1>
-    <Router.RouteHandler/>
+    <ul>
+        <li><Link to={`/about`}>About</Link></li>
+    </ul>
+    <RouteHandler/>
 </div>

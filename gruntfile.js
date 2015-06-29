@@ -37,7 +37,7 @@ module.exports = function(grunt) {
 
         // Build Tasks:
         clean: {
-            build: ["obj/rt", "obj/src", "obj/es5"]
+            build: ["obj/rt", "obj/src", "obj/es5", "obj/es6"]
         },
         eslint: {
             target: ['src/**/*.js'],
@@ -46,31 +46,46 @@ module.exports = function(grunt) {
         babel: {
             options: {
                 sourceMap: "inline",
-                optional: "runtime"
+                optional: "runtime",
+                nonStandard: "jsx"
             },
             dist: {
                 files: [{
                     "expand": true,
-                    "cwd": "src/",
+                    "cwd": "obj/es6/",
+                    "src": ["**/*.js"],
+                    "dest": "obj/es5"
+                }]
+            },
+            rt: {
+                files: [{
+                    "expand": true,
+                    "cwd": "obj/rt/",
                     "src": ["**/*.js"],
                     "dest": "obj/src",
-                    "ext": ".js"
+                    "ext": ".rt.js"
                 }]
             }
         },
         reactTemplates: {
-            modules: 'commonjs',
+            modules: 'es6',
             format: 'stylish',
-            src: ['obj/rt/**/*.rt']
+            src: ['obj/rt/**/*.rt'],
+            defines: {
+                'react/addons': 'React',
+                'lodash': '_',
+                'react-router': '{ Router, Route, Link, RouteHandler }'
+            }
         },
         jasmine_node: {
-            projectRoot: 'obj/src/tests/',
+            projectRoot: 'obj/es5/tests/',
             specNameMatcher: 'test',
             matchall: true,
             all: []
         },
         watchify: {
             options: {
+                debug: true,
                 browserifyOptions: {
                     debug: true
                 }
@@ -84,7 +99,7 @@ module.exports = function(grunt) {
             optimize: {
                 closurePath:'obj/closure',
                 js: 'obj/es5/compiled.js',
-                jsOutputFile: 'obj/es5/compiled.min.js',
+                jsOutputFile: 'bin/compiled.min.js',
                 options: {
                     compilation_level: 'SIMPLE_OPTIMIZATIONS'
                 }
@@ -103,8 +118,15 @@ module.exports = function(grunt) {
                 expand: true,
                 cwd: 'obj/rt/',
                 src: ['**/*.js'],
-                dest: 'obj/src/'
+                dest: 'obj/es6/'
+            },
+            "es6-out": {
+                expand: true,
+                cwd: 'src',
+                src: ['**/*.js'],
+                dest: 'obj/es6'
             }
+
         },
 
 
@@ -121,14 +143,21 @@ module.exports = function(grunt) {
         watch: {
             'eslint-babel': {
                 files: ['src/**/*.js'],
-                tasks: ['eslint', 'babel'],
+                tasks: ['eslint', 'babel:dist'],
+                options: {
+                    interrupt: true
+                }
+            },
+            'rt-babel': {
+                files: ['obj/rt/**/*.js'],
+                tasks: ['babel:rt'],
                 options: {
                     interrupt: true
                 }
             },
             'react-templates': {
                 files: ['src/**/*.rt'],
-                tasks: ['copy:rt-in', 'react-templates', 'copy:rt-out' ]
+                tasks: ['copy:rt-in', 'react-templates', 'babel:rt' ]
             },
             'browserify': {
                 files: ['obj/src/**/*.js'],
@@ -168,11 +197,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.registerTask('default', [
         'clean',
-        'eslint',
-        'babel',
+        'copy:es6-out',
         'copy:rt-in',
         'react-templates',
         'copy:rt-out',
+        'eslint',
+        'babel:dist',
         'jasmine_node:all',
         'mkdir:obj/es5',
         'watchify',

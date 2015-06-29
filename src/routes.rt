@@ -1,6 +1,5 @@
-<rt-require dependency="react-router" as="Router" />
 <rt-require dependency="./app" as="App" />
 <rt-require dependency="./about/about" as="About" />
-<Router.Route handler={App}>
-    <Router.Route path="about" handler={About} />
-</Router.Route>
+<Route handler={App}>
+    <Route path="about" handler={About} />
+</Route>

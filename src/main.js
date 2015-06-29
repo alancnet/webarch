@@ -4,7 +4,7 @@ import routes from "./routes.rt";
 
 export function run(hash, target) {
     router.run(routes(), hash, (Root) => {
-        React.render(React.createElement(Root, {}), target);
+        React.render(<Root />, target);
     });
 
 }
@@ -13,12 +13,19 @@ export function run(hash, target) {
  * Iterator for fibonacci numbers
  */
 export function* fib() {
-    function* loop(pre, cur) {
-        yield cur;
-        yield* loop(cur, pre + cur);
+    function* cons(val, fun) {
+        yield val;
+        yield* fun();
     }
+    function loop2(pre, cur) {
+        return cons(pre, ()=>loop2(cur, pre + cur));
+    }
+    //function* loop(pre, cur) {
+    //    yield cur;
+    //    yield* loop(cur, pre + cur);
+    //}
 
-    yield* loop(0, 1);
+    yield* loop2(0, 1);
 }
 
 

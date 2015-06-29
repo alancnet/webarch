@@ -4,7 +4,6 @@ import rt from "./app.rt";
 export default class App extends React.Component {
     constructor() {
         super();
-        window.console.log("Hello");
         this.render = rt;
     }
 }

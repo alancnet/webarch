@@ -1,9 +1,9 @@
-let main = require("../main");
-
+import {fib, take} from "../main";
 
 describe("fib()", () => {
     it("iterates infinitely", ()=> {
-        var fit = main.fib();
+        var fit = fib();
+        expect(fit.next().value).toBe(0);
         expect(fit.next().value).toBe(1);
         expect(fit.next().value).toBe(1);
         expect(fit.next().value).toBe(2);
@@ -17,11 +17,11 @@ describe("fib()", () => {
 
 describe("take()", () => {
     it("Limits an iterator to n items", () => {
-        let fit = main.fib();
+        let fit = fib();
         let state = {
             count: 0
         };
-        for (let n in main.take(fit, 5)) {
+        for (let n in take(fit, 5)) {
             state.last = n;
             state.count++;
         }

@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        // External resources:
+        package: grunt.file.readJSON('package.json'),
+
         // Initial Tasks:
         "closure-compiler-build": {
             build: {
@@ -37,7 +40,7 @@ module.exports = function(grunt) {
 
         // Build Tasks:
         clean: {
-            build: ["obj/rt", "obj/src", "obj/es5", "obj/es6"]
+            build: ["obj/rt", "obj/src", "obj/es5", "obj/es6", "dist"]
         },
         eslint: {
             target: ['src/**/*.js'],
@@ -91,15 +94,15 @@ module.exports = function(grunt) {
                 }
             },
             development: {
-                src: ["./obj/src/**/*.js", '!./obj/src/**/*-test.js'],
-                dest: "obj/es5/compiled.js"
+                src: ["./obj/es5/**/*.js", '!./obj/es5/**/*-test.js'],
+                dest: "dist/<%- package.name%>.js"
             }
         },
         "closure-compiler": {
             optimize: {
                 closurePath:'obj/closure',
-                js: 'obj/es5/compiled.js',
-                jsOutputFile: 'bin/compiled.min.js',
+                js: 'dist/<%- package.name%>.js',
+                jsOutputFile: 'dist/<%- package.name%>.min.js',
                 options: {
                     compilation_level: 'SIMPLE_OPTIMIZATIONS'
                 }
@@ -142,39 +145,31 @@ module.exports = function(grunt) {
         },
         watch: {
             'eslint-babel': {
-                files: ['src/**/*.js'],
-                tasks: ['eslint', 'babel:dist'],
-                options: {
-                    interrupt: true
-                }
+                files: ['obj/es6/**/*.js'],
+                tasks: ['eslint', 'babel:dist']
             },
             'rt-babel': {
                 files: ['obj/rt/**/*.js'],
-                tasks: ['babel:rt'],
-                options: {
-                    interrupt: true
-                }
+                tasks: ['babel:rt']
             },
             'react-templates': {
                 files: ['src/**/*.rt'],
                 tasks: ['copy:rt-in', 'react-templates', 'babel:rt' ]
             },
-            'browserify': {
-                files: ['obj/src/**/*.js'],
-                tasks: ['jasmine_node:all', 'mkdir:obj/es5'],
-                options: {
-                    livereload: true
-                }
+            'test': {
+                files: ['obj/es5/**/*.js'],
+                tasks: ['jasmine_node:all', 'mkdir:obj/es5', 'watchify']
             },
-            //'closure-compiler:optimize': {
-            //    files: ['obj/es5/compiled.js'],
-            //    tasks: ['closure-compiler:optimize'],
-            //    options: {
-            //        interrupt: true
-            //    }
-            //},
+            'copy-src': {
+                files: ['src/**/*.js'],
+                tasks: ['copy:es6-out']
+            },
+            'closure': {
+                files: ['dist/<%- package.name %>.js'],
+                tasks: ['closure-compiler:optimize']
+            },
             'content-files': {
-                files: ['*.html'],
+                files: ['*.html', 'dist/**/*.js'],
                 options: {
                     livereload: true
                 }

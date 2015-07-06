@@ -1,0 +1,19 @@
+{
+  "name": "wa-library",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "react": "^0.13.3",
+    "wa-build": "0.0.23"
+  },
+  "dependencies": {
+    "babel-runtime": "^5.6.15"
+  }
+}

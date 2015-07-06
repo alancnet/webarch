@@ -1,0 +1,5 @@
+<rt-require dependency="./app/app" as="App" />
+<!--<rt-require dependency="./about/about" as="About" />-->
+<Route handler={App}>
+    <!--<Route path="about" handler={About} />-->
+</Route>

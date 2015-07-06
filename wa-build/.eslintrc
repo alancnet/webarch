@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "strict": 0,
+    "indent": [2, 4],
+    "quotes": [1, "single", "avoid-escape"],
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "always"],
+    "eqeqeq": [2, "smart"],
+    "generator-star-spacing": [2, "after"],
+    "no-unused-vars": [1],
+    "no-extra-semi": [0],
+    "eol-last": [0],
+    "no-unused-vars": [1, {"vars": "local", "args": "after-used"}],
+    "yoda": [1, "never", {
+      "exceptRange": true,
+      "onlyEquality": false
+    }]
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "jasmine": true,
+    "amd": true,
+    "node": true
+  },
+  "ecmaFeatures": {
+    "modules": true,
+    "jsx": true,
+    "forOf": true
+  }
+}
